@@ -1,0 +1,165 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+    <!-- Main hero homepage img -->
+    <header class="hero text-center text-white d-flex" style="background-image: url({{ backgroundImage.getBackground() }})">
+        <div class="container-fluid my-auto">
+
+            <div class="row">
+                <div class="col-lg-12 mx-auto">
+                    {{ pimcore_wysiwyg('header') }}
+                </div>
+            </div>
+            <div class="row image-three-buttons justify-content-center py-md-4">
+                <div class="col-sm-4 col-md-4 col-lg-3">
+                    <a href="{{ path('category') }}">
+                        {{ pimcore_image("hero-image-left", {
+                            "alt": pimcore_image("hero-image-left").getAlt(),
+                            "class": "hero-icons",
+                        }) }}
+                    </a>
+                    {{ pimcore_wysiwyg('step1') }}
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-3">
+                    <a href="{{ path('category') }}">
+                        {{ pimcore_image("hero-image-middle", {
+                            "alt": pimcore_image("hero-image-middle").getAlt(),
+                            "class": "hero-icons",
+                        }) }}
+                    </a>
+                    {{ pimcore_wysiwyg('step2') }}
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-3">
+                    <a href="{{ path('category') }}">
+                        {{ pimcore_image("hero-image-right", {
+                            "alt": pimcore_image("hero-image-right").getAlt(),
+                            "class": "hero-icons",
+                        }) }}
+                    </a>
+                    {{ pimcore_wysiwyg('step3') }}
+                </div>
+            </div>
+            <div class="row mb-2 pt-md-5">
+                <div class="col-10 col-sm-5 col-md-5 col-lg-4 col-xl-3 mx-auto">
+                    <a class="btn btn-primary-blue btn-block text-uppercase" href="{{ path('category') }}">{{ "Starten"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if editmode %}
+        <div class="container">
+            <p>{{ "Provider für Slider" | trans }}:</p>
+            {{ pimcore_multihref("objectPaths") }}
+        </div>
+    {% else %}
+        <div class="container-fluid provider-slider" style="background-color: #f4f4f4;">
+            <div class="container" >
+                <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="9000">
+                    <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                        {% for provider in pimcore_multihref("objectPaths") %}
+                            <div class="carousel-item col-md-3  {% if loop.first %}active{% endif %}">
+                                <div class="panel panel-default">
+                                    <div class="panel-thumbnail">
+                                        <a href="{{ provider.getProviderLink().getPath() }}" target="_blank" title="{{ provider.getName() }}" class="thumb">
+                                            <img class="img-fluid mx-auto d-block" src="{{ provider.getSliderImage() }}" alt="Pickoutsports_{{ provider.getName() }}">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next text-faded" href="#carouselExample" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <section id="homepage">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10">
+                    {{ pimcore_wysiwyg('subheader') }}
+                    <p>
+                        {{ pimcore_input('subheader-text') }}
+                    </p>
+                    {{ pimcore_wysiwyg('subsubheader') }}
+                </div>
+            </div>
+
+            <div class="row row-cards justify-content-center">
+                <div class="col-12 col-sm-9 col-md-8 col-lg-4">
+                    <div class="card box card-shadow">
+                        {{ pimcore_image("card-image-left", {
+                            "alt": pimcore_image("card-image-left").getAlt(),
+                            "class": "card-img-choice",
+                            "thumbnail": "cardimg"
+                        }) }}
+                        <div class="row-icon">
+                            <a href="{{ path('category') }}">
+                            <img class="overflow-icon-test" src="img/pfad-1-black.png" alt="Number 1">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ pimcore_input('card-header-left') }}</h3>
+                            <p class="card-text">{{ pimcore_input('card-text-left') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-9 col-md-8 col-lg-4">
+                    <div class="card box card-shadow">
+                        {{ pimcore_image("card-image-middle", {
+                            "alt": pimcore_image("card-image-middle").getAlt(),
+                            "class": "card-img-choice",
+                            "thumbnail": "cardimg"
+                        }) }}
+                        <div class="row-icon">
+                            <a href="{{ path('category') }}">
+                            <img class="overflow-icon-test" src="img/pfad-2-black.png" alt="Number 2">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ pimcore_input('card-header-middle') }}</h3>
+                            <p class="card-text">{{ pimcore_input('card-text-middle') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-9 col-md-8 col-lg-4">
+                    <div class="card box card-shadow">
+                        {{ pimcore_image("card-image-right", {
+                            "alt": pimcore_image("card-image-right").getAlt(),
+                            "class": "card-img-choice",
+                            "thumbnail": "cardimg"
+                        }) }}
+                        <div class="row-icon">
+                            <a href="{{ path('category') }}">
+                            <img class="overflow-icon-test" src="img/pfad-3-black.png" alt="Number 3">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ pimcore_input('card-header-right') }}</h3>
+                            <p class="card-text">{{ pimcore_input('card-text-right') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 mx-auto">
+                    <a class="btn btn-primary-blue btn-block text-uppercase" href="{{ path('category') }}">{{ "Starten"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

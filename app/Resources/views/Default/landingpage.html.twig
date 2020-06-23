@@ -1,0 +1,344 @@
+{% extends 'landingpagelayout.html.twig' %}
+
+{% block title %}{{ document.getTitle() }}{% endblock %}
+
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body_class %}landingpage{% endblock %}
+{% block body %}
+
+    {% if editmode %}
+        <div class="container" style="margin-top: 50px;">
+            Hintergrundbild:
+            {{ pimcore_href("image",{
+                "types" : ["object"],
+                "classes" : ["Backgroundimage"]
+            }) }}
+
+
+            Text im Bild:
+            {{ pimcore_wysiwyg('imageheader') }}
+
+            <div class="row">
+                <div class="col-4">
+                    Bild mit Untertext Links:
+                    {{ pimcore_image("hero-image-left", {
+                        "alt": pimcore_image("hero-image-left").getAlt(),
+                        "class": "hero-icons",
+                    }) }}
+                    {{ pimcore_wysiwyg('step1') }}
+                </div>
+                <div class="col-4">
+                    Bild mit Untertext Mitte:
+                    {{ pimcore_image("hero-image-middle", {
+                        "alt": pimcore_image("hero-image-middle").getAlt(),
+                        "class": "hero-icons",
+                    }) }}
+                    {{ pimcore_wysiwyg('step2') }}
+                </div>
+                <div class="col-4">
+                    Bild mit Untertext Rechts:
+                    {{ pimcore_image("hero-image-right", {
+                        "alt": pimcore_image("hero-image-right").getAlt(),
+                        "class": "hero-icons",
+                    }) }}
+                    {{ pimcore_wysiwyg('step3') }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="landingpage">
+        {% if not editmode %}
+            <header class="hero text-center text-white d-flex" style="background-image: url({{ pimcore_href('image').getElement().getBackground() }})">
+                <div class="container-fluid my-auto">
+                    <div class="row">
+                        <div class="col-lg-12 mx-auto">
+                            {{ pimcore_wysiwyg('imageheader') }}
+                        </div>
+                    </div>
+                    <div class="row image-three-buttons justify-content-center py-md-4">
+                        <div class="col-sm-4 col-md-4 col-lg-3">
+                            <a href="{{ path('sporttype') }}">
+                                {{ pimcore_image("hero-image-left", {
+                                    "alt": pimcore_image("hero-image-left").getAlt(),
+                                    "class": "hero-icons",
+                                }) }}
+                            </a>
+                            {{ pimcore_wysiwyg('step1') }}
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-3">
+                            <a href="{{ path('sporttype') }}">
+                                {{ pimcore_image("hero-image-middle", {
+                                    "alt": pimcore_image("hero-image-middle").getAlt(),
+                                    "class": "hero-icons",
+                                }) }}
+                            </a>
+                            {{ pimcore_wysiwyg('step2') }}
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-3">
+                            <a href="{{ path('sporttype') }}">
+                                {{ pimcore_image("hero-image-right", {
+                                    "alt": pimcore_image("hero-image-right").getAlt(),
+                                    "class": "hero-icons",
+                                }) }}
+                            </a>
+                            {{ pimcore_wysiwyg('step3') }}
+                        </div>
+                    </div>
+                    <div class="row mb-2 pt-md-5">
+                        <div class="col-10 col-sm-5 col-md-5 col-lg-4 col-xl-3 mx-auto">
+                            <a class="btn btn-primary-blue btn-block text-uppercase" href="{{ path('sporttype') }}">{{ "Starten"|trans }}</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        {% endif %}
+
+
+        {% if editmode %}
+            <div class="container">
+                <p>{{ "Provider für Slider" | trans }}:</p>
+                {{ pimcore_multihref("objectPaths") }}
+            </div>
+        {% else %}
+            <div class="container provider-slider">
+                <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="9000">
+                    <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                        {% for provider in pimcore_multihref("objectPaths") %}
+                            <div class="carousel-item col-md-3  {% if loop.first %}active{% endif %}">
+                                <div class="panel panel-default">
+                                    <div class="panel-thumbnail">
+                                        <a href="{{ provider.getProviderLink().getPath() }}" target="_blank" title="{{ provider.getName() }}" class="thumb">
+                                            <img class="img-fluid mx-auto d-block" src="{{ provider.getSliderImage() }}" alt="Pickoutsports_{{ provider.getName() }}">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next text-faded" href="#carouselExample" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        {% for message in app.flashes('warning') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {{ pimcore_areablock("starsblock",{
+            "allowed" : ["add-stars"],
+        }) }}
+
+        <div class="container" style="text-align: center;">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.pickoutsports.de/{{document.getKey()}}" target="_blank"><i class="fab fa-facebook-square" style="font-size: 35px;"></i> Auf Facebook teilen</a>
+        </div>
+        <div class="container">
+
+{#            {% if not editmode %}#}
+{#                <div class="googleAdsContainer" style="margin-top:-110px;left:10px;position:absolute;width:120px;height:600px;">#}
+{#                    <ins class="adsbygoogle"#}
+{#                         style="display:block;"#}
+{#                         data-ad-client="ca-pub-6966232917900984"#}
+{#                         data-ad-slot="6257166565"#}
+{#                         data-ad-format="auto"#}
+{#                         data-full-width-responsive="true"></ins>#}
+{#                </div>#}
+
+{#                <script>#}
+{#                    (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#                </script>#}
+
+{#                <div class="googleAdsContainer" style="margin-top:-110px;right:10px;position:absolute;width:120px;height:600px;">#}
+{#                    <ins class="adsbygoogle"#}
+{#                         style="display:block;"#}
+{#                         data-ad-client="ca-pub-6966232917900984"#}
+{#                         data-ad-slot="6257166565"#}
+{#                         data-ad-format="auto"#}
+{#                         data-full-width-responsive="true"></ins>#}
+{#                </div>#}
+
+{#                <script>#}
+{#                    (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#                </script>#}
+
+{#            {% endif %}#}
+            {% if editmode %}
+
+                <div class="container" style="margin-top:90px">
+                    Sportart:
+                    {{ pimcore_href("sportart",{
+                        "types" : ["object"],
+                        "classes" : ["Sporttype"]
+                    }) }}
+
+                    Ligen:
+                    {{ pimcore_multihref("ligen",{
+                        "types" : ["object"],
+                        "classes" : ["League"]
+                    }) }}
+                </div>
+
+
+            {% endif %}
+
+            <h1 class="text-center" style="margin-top:90px;">{% if editmode %}{Untertitel}{% endif %}{% if not editmode %}{{ document.getProperties().Untertitel.getData() }}{% endif %}</h1>
+            {% if not editmode %}<div class="descriptionText">{% endif %}
+                {{  pimcore_wysiwyg("descriptionText", {
+                    "height": 200,
+                }) }}
+                {% if not editmode %}</div>{% endif %}
+
+            {{ pimcore_areablock("myAreablock") }}
+
+
+            {% if pimcore_href('sportart').getElement() %}
+                <div id="sp" data-sportart="{{ pimcore_href('sportart').getElement().getName()}}" hidden></div>
+            {% endif %}
+
+
+            <table class="table table-hover">
+                <tbody>
+                {% for provider in providers %}
+                    {% if not provider.isCombination() %}
+                        <tr>
+                            <td>
+                                {% if provider.getProviderLink() %}
+                                    <a href="{{ provider.getProviderLink().getPath() }}" target="_blank"><img src="{{ provider.getLogo() }}" style="width:62px"></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <p class="check-td-empty" style="margin-left:40px; text-align:left">
+                                    {% for league in pimcore_multihref("ligen") %}
+                                        {% for p in league.getProvider() %}
+                                            {% if p.getName() == provider.getName() %}
+                                                {% if league.published == 1 %}
+                                                    {{ league.getName() }},
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {{  pimcore_wysiwyg("endText", {"height": 200}) }}
+
+            {{ pimcore_areablock("myAreablock2") }}
+
+            {% if editmode %}
+                <div class="container" style="margin-top:30px;">
+                    Empfehlung Sportart:
+                    <br>Überschrift: {{ pimcore_input("empefhlungUeberschrift") }}
+
+                    {{ pimcore_multihref("empfehlung",{
+                        "types" : ["document"],
+                    }) }}
+                </div>
+            {% endif %}
+
+        </div>
+        <div class="col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3 mx-auto">
+            {{ pimcore_link('startlink',{
+                'class' : 'btn btn-primary-blue btn-block text-uppercase',
+                'style' : 'margin-top:90px; margin-bottom: 90px'
+            }) }}
+        </div>
+
+        {% if not editmode %}
+            {% if pimcore_multihref("empfehlung") is not empty %}
+                <div class="container" style="border-top: 1px solid #dee2e6;">
+                    <h3 style="margin-top:30px">{{ pimcore_input("empefhlungUeberschrift") }}</h3>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                {% for league in pimcore_multihref("empfehlung") %}
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                                        <div class="empfehlung-container" style="border: 1px solid #dee2e6; padding:15px;margin:5px 0">
+                                            <a href="/{{ league.getKey() }}">
+                                                <p style="font-size: 1.4rem;">{{ league.getProperty('empfehlungstitel') }}</p>
+                                                {% if league.getProperty('landingpage_image') %}
+                                                    <img src="{{ league.getProperty('landingpage_image').getThumbnail('empfehlung-teaser') }}" style="width:100%">
+                                                {% endif %}
+                                                <p style="font-size: 1.4rem;">{{ league.getProperty('empfehlungstext') }}</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{#    <div id="my-modal" class="modal" tabindex="-1" role="dialog">#}
+{#        <div class="modal-dialog" role="document">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header" style="background-color:#0077ac">#}
+{#                    <h5 class="modal-title" style="color:white;">pick out sports Newsletter</h5>#}
+{#                    <button style="color:white;margin:-2rem -1rem -1rem auto;" type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">#}
+{#                        <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+{#                </div>#}
+{#                <form method="post" id="cookieForm">#}
+{#                    <div class="modal-body">#}
+{#                        <h3>Alle News zu Deinen Sendern und TV-Rechten!</h3>#}
+{#                        <div class="form-check">#}
+{#                            <input type="checkbox" name="newsletter-check" class="form-check-input" id="newsletter">#}
+{#                            <label class="form-check-label" for="newsletter">Ich möchte das kostenlose Newsletter Abo</label>#}
+{#                        </div>#}
+{#                        <input type="email" class="form-control" name="newsletter-email" placeholder="E-Mail*" required>#}
+{#                        <div class="form-check">#}
+{#                            <input type="checkbox" name="readData-check" class="form-check-input" id="readData">#}
+{#                            <label class="form-check-label" for="readData">Ich habe die Datenschutzerklärung gelesen und bin damit einverstanden <a href="{{ path("datenschutz") }}" target="_blank">"Zur Datenschutzerklärung"</a></label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="modal-footer">#}
+{#                        <button type="submit" name="sendEmail" class="btn btn-primary">Senden</button>#}
+{#                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Schließen</button>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <div id="landing-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0077ac">
+                    <h5 class="modal-title" style="color:white;">pick out sports</h5>
+                    <button style="color:white;margin:-2rem -1rem -1rem auto;" type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="cookieForm">
+                    <div style="text-align:center" class="modal-body">
+                        <h3>Erstelle Dir jetzt Dein individuelles Sport-Programm</h3>
+                        <a style="margin-top:15px;border-radius:0;width: 140px;height: 50px;font-size: 1.5rem;" id="modalButton" class="btn btn-primary" href="/sporttype">STARTEN</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

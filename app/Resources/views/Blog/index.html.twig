@@ -1,0 +1,31 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+    <div class="container" id="blogContent" style="margin-top:100px;">
+        <section id="breadcrumb-header">
+            <div class="col-12 text-center">
+                <h1>{{ "BLOG"|trans }}</h1>
+            </div>
+        </section>
+        <div class="row">
+            {% for blog in blogs %}
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 blog">
+                    <div class="card">
+                        {% if blog.image %}
+                            <img src="{{ blog.getImage() }}" title="{{ blog.getImage().getMetaData("title") }}" alt="{{ blog.getImage().getMetaData("alt") }}"/>
+                        {% endif %}
+                        <div class="card-body">
+                            <h1>{{ blog.titel }}</h1>
+                            <h5 class="card-title">{{ blog.teaser }}</h5>
+                            <p class="card-text">{{ blog.preview|raw }}</p>
+                            {% set key = blog.getKey()|url_encode %}
+                            <a href="{{ path('blog_details',{'key': key  })}}" class="btn btn-primary">{{ "weiterlesen"|trans }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

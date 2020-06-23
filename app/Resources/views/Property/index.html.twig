@@ -1,0 +1,170 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+    <form method="post" action="props" id="leagues-form-padding-footer">
+
+        {% if categories is defined %}
+            {% for type in categories %}
+                <input name="categories[{{ type.id }}][id]" value="{{type.id  }}" hidden>
+                <input name="categories[{{ type.id }}][shown]" value="{{ type.shown }}" hidden>
+            {% endfor %}
+        {% endif %}
+
+        {% if viewData is defined %}
+            {% for data in viewData %}
+                {% for type in data %}
+                    {% if type.propertyContent is defined %}
+                        {% for k,v in type.propertyContent %}
+                            <input name="categories[{{ type.id }}][propertyContent][category]" value="{{ type.id }}" hidden>
+                            <input name="categories[{{ type.id }}][propertyContent][{{ k }}]" value="{{ v }}" hidden>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+
+
+        <section id="breadcrumb-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="breadcrumb justify-content-center">
+                            <li><a href="{{ path('index') }}"><img src="img/home.png"></a></li>
+                            <li><a href="{{ path('category') }}" >{{ "KATEGORIE"|trans }}</a></li>
+                            <li><button href="{{ path('props') }}" type="submit" class="active">{{ "EIGENSCHAFTEN"|trans }}</button></li>
+                            <li><button type="submit" id="nextLeague">{{ "PRODUKTE"|trans }}</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1>{{ category.getName() }}
+                            <a href="#" style="margin-left:auto;margin-right:auto;font-size: 30px;" class="tooltipButton" data-toggle="tooltip" data-placement="top" title="{{ "Wähle die Ligen aus, die Dich interessieren."|trans }}">
+                                <i id="tooltipCircle" class="fas fa-info-circle"></i>
+                            </a>
+                        </h1>
+                        {#<input type="hidden" name="leagueContent[sporttype]" value="{{ sporttype.getId() }}">#}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% if valid is defined %}
+            <div class="container">
+                <div class="alert alert-danger" role="alert">
+                    {{ "Du hast keine Ligen ausgewählt"|trans }}
+                </div>
+            </div>
+        {% endif %}
+
+{#        <div class="googleAdsContainer" style="margin-top:-210px;left:10px;position:absolute;width:120px;height:600px;">#}
+{#            <ins class="adsbygoogle"#}
+{#                 style="display:block;"#}
+{#                 data-ad-client="ca-pub-6966232917900984"#}
+{#                 data-ad-slot="6257166565"#}
+{#                 data-ad-format="auto"#}
+{#                 data-full-width-responsive="true"></ins>#}
+{#        </div>#}
+
+{#        <script>#}
+{#            (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#        </script>#}
+
+{#        <div class="googleAdsContainer" style="margin-top:-210px;right:10px;position:absolute;width:120px;height:600px;">#}
+{#            <ins class="adsbygoogle"#}
+{#                 style="display:block;"#}
+{#                 data-ad-client="ca-pub-6966232917900984"#}
+{#                 data-ad-slot="6257166565"#}
+{#                 data-ad-format="auto"#}
+{#                 data-full-width-responsive="true"></ins>#}
+{#        </div>#}
+
+{#        <script>#}
+{#            (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#        </script>#}
+
+        <section id="sport-accordion">
+            <div class="container">
+                <div class="row justify-content-around">
+                    <div class="col-12 col-lg-7 accordion">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            {% for value in propertyValues %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed arrow-down" role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ value.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                                <img src="{{ value.flag }} title="{{ value.flag.getMetaData("title") }}" alt="{{ value.flag.getMetaData("alt")}}" >
+                                                {{ value.name }}
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="{{ value.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body">
+                                            <div class="list-group">
+                                                {% for meta in value.leagueMeta %}
+                                                    {% if meta.type == category.getName() %}
+                                                        <div class="list-group-item list-group-item-action accordionButton accordion-passive" id="{{ meta.id }}">
+                                                            {{ meta.name }}
+
+                                                            {% if categories is defined %}
+                                                                {% for type in categories %}
+                                                                    {% if type.id == category.getId %}
+                                                                        <input class="leagueCheckbox" type="checkbox" name="categories[{{ category.getId() }}][propertyContent][{{ meta.id }}]" value="{{ meta.id }}" style="display:none;" >
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+
+                                                            <a href="#" class="tooltipBtn" data-toggle="tooltip" data-placement="right" title="{{ meta.toolTip }}">
+                                                                <div class="arrow"></div>
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div><!-- panel-group -->
+                    </div>
+
+                    {#<div class="col d-none d-lg-block align-self-end col-buttons text-right">#}
+                        {#<button class="btn btn-primary-blue btn-next text-uppercase" type="submit">Weiter</button>#}
+                    {#</div>#}
+                </div>
+
+                <div class="row justify-content-between leaguesBtn">
+                    <div class="col align-self-end col-buttons">
+                        <a class="btn btn-primary-blue btn-prev text-uppercase" href="{{ path('category') }}">{{ "Zurück"|trans }}</a>
+                    </div>
+                    <div class="col align-self-end col-buttons text-right">
+                        <button class="btn btn-primary-blue btn-next text-uppercase" type="submit">{{ "Weiter"|trans }}</button>
+                    </div>
+
+                </div>
+
+            </div><!-- container -->
+        </section>
+    </form>
+
+{#    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>#}
+{#    <!-- Display Anzeigen -->#}
+{#    <div class="container" style="margin-bottom:245px;">#}
+{#        <ins class="adsbygoogle"#}
+{#             style="display:block;"#}
+{#             data-ad-client="ca-pub-6966232917900984"#}
+{#             data-ad-slot="6257166565"#}
+{#             data-ad-format="auto"#}
+{#             data-full-width-responsive="true"></ins>#}
+{#    </div>#}
+
+{#    <script>#}
+{#        (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#    </script>#}
+
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ blog.getMetaTitle() }}{% endblock %}
+{% block description %}{{ blog.getMetaDescription() }}{% endblock %}
+{% block body %}
+
+<div id="blogDetails" class="container" style="margin-top:100px;">
+    <section id="breadcrumb-header">
+        <div class="col-12 text-center">
+            <h1>Blog</h1>
+        </div>
+    </section>
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ blog.titel }}</h1>
+        </div>
+        {% if blog.image %}
+            <img src="{{ blog.getImage() }}" title="{{ blog.getImage().getMetaData("title") }}" alt="{{ blog.getImage().getMetaData("alt") }}"/>
+        {% endif %}
+        <div class="card-body">
+            <h2 class="card-title">{{ blog.teaser }}</h2>
+            <p class="card-text">{{ blog.text|raw }}</p>
+            <a href="{{ path('blog') }}" class="btn btn-primary">{{ "Zurück"|trans }}</a>
+        </div>
+    </div>
+</div>
+    <div id="my-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0077ac">
+                    <h5 class="modal-title" style="color:white;">pick out sports Newsletter</h5>
+                    <button style="color:white;margin:-2rem -1rem -1rem auto;" type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <h3>Alle News zu Deinen Sendern und TV-Rechten!</h3>
+                        <div class="form-check">
+                            <input type="checkbox" name="newsletter-check" class="form-check-input" id="newsletter">
+                            <label class="form-check-label" for="newsletter">Ich möchte das kostenlose Newsletter Abo</label>
+                        </div>
+                        <input type="email" class="form-control" name="newsletter-email" placeholder="E-Mail*" required>
+                        <div class="form-check">
+                            <input type="checkbox" name="readData-check" class="form-check-input" id="readData">
+                            <label class="form-check-label" for="readData">Ich habe die Datenschutzerklärung gelesen und bin damit einverstanden <a href="{{ path("datenschutz") }}" target="_blank">"Zur Datenschutzerklärung"</a></label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="sendEmail" class="btn btn-primary">Senden</button>
+                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Schließen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

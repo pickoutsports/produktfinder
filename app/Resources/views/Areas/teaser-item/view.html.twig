@@ -1,0 +1,21 @@
+{% set link = pimcore_link("card-link",{class:"btn btn-primary"})  %}
+{% if editmode %}<div style="border: dashed 1px hotpink">{% endif %}
+    <div class="news-element">
+        <div class="row">
+            <div class="col-12">
+                {{ pimcore_image("card-image",{class:"img-fluid"}) }}
+            </div>
+            <div class="col-12 news-content-wrapper">
+                <div class="news-content" style="padding: 1.875rem">
+                    <h3 class="articleTitle">{{ pimcore_wysiwyg("card-title")}}</h3>
+                    <p class="card-text">{{ pimcore_wysiwyg("card-text") }}</p>
+                    <div class="col-12">
+                        {{ link|raw }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% if editmode %}</div>{% endif %}
+
+

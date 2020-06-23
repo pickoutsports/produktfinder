@@ -1,0 +1,203 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+<section id="breadcrumb-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <ul class="breadcrumb justify-content-center">
+                    <li><a href="{{ path('index') }}"><img src="{{ asset('img/home.png')}}"></a></li>
+                    <li><a href="{{ path('category') }}" >{{ "KATEGORIEN"|trans }}</a></li>
+                    <li><a href="{{ path('props',{ 'categories': categories }) }}">{{ "EIGENSCHAFTEN"|trans }}</a></li>
+                    <li><a href="{{ path('product') }}" class="active">{{ "PRODUKTE"|trans }}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>{{ "PRODUKTE & PREISE"|trans }}
+
+                    <a href="#" style="margin-left:auto;margin-right:auto;font-size: 30px;" class="tooltipButton" data-toggle="tooltip" data-html="true" data-placement="top" title="
+                1. Die farbigen Anbieter sind die passenden Sender, um alle Deine Ligen zu sehen.<br>
+                2. Die grauen Anbieter sind Alternativen, aber für Deine Auswahl nicht notwendig.<br>
+                3. Die blauen Kürzel links zeigen dir welche Deiner Ligen bei welchem Anbieter laufen.<br>
+                4. Die Übereinstimmung links zeigt Dir wie viel Prozent Deiner ausgewählten Ligen bei diesem Anbieter laufen.<br>
+                5. Über den Button „ZUM ANBIETER“ kommst Du zu der Website des jeweiligen Anbieters."
+                >
+                        <i id="tooltipCircle" class="fas fa-info-circle"></i>
+
+                    </a>
+
+                </h1>
+                {#<p>
+                    Super, fast geschafft! Die folgenden Anbieter zeigen Deine Ligen.
+                    Klicke jetzt auf “WEITER” und buche Dir Dein Sport-Paket!
+                </p>#}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="providers">
+    <div class="container">
+        {% for message in app.flashes('warning') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% if result is defined %}
+            {#{% for providers in result %}#}
+                {% for provider in result %}
+                <div style="margin-bottom:30px;padding-bottom:15px;" class="row border providers-row justify-content-end justify-content-sm-around selected-provider unchecked" data-provider="{{ provider.getName() }}" data-combination="{{ provider.getIsCombination() }}" data-leagues="">
+                    <div class="col-lg-3 col-md-8 col-sm-12 col-xl-3 col-xs-12">
+                        <div class="img-placeholder mx-auto">
+                                <img src="{{ provider.getLogo() }}" class="logo-provider img-fluid" title="{{ provider.getLogo().getMetaData("title") }}" alt="{{ provider.getLogo().getMetaData("alt") }}">
+                        </div>
+                        {% set length = 0 %}
+                        {% if props%}
+                            {% for league in props %}
+                                {% for element in league.getProduct() %}
+                                    {% if element.getName() == provider.getName() %}
+                                        {% if league.getShortcut() %}
+                                            {% set length = length + 1 %}
+                                            <p class="league-shortcut" data-league="{{ league.getId() }}" data-all="{{ league.getAllGames() }}">{{ league.getShortcut() }}</p>
+                                        {% else %}
+                                            {% set length = length + 1 %}
+                                            <p class="league-shortcut" data-league="{{ league.getId() }}" data-all="{{ league.getAllGames() }}">{{ league.getName() }}</p>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="progress" style="margin-top: 10px;margin-bottom: 10px">
+                            Übereinstimmung:&nbsp &nbsp
+                            {% set total = 100 * length / countLeague %}
+                            <div class="progress-bar" role="progressbar" style="width: {{ total }}%;" aria-valuenow="{{ length }}" aria-valuemin="0" aria-valuemax="{{ countLeague }}">{{ total|number_format(2) }}%</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-10 col-sm-12 col-xl-5 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12 col-xs-12 title-provider align-self-center">
+                                <h2>{{ provider.getName() }}</h2>
+                            </div>
+                            <div class="col-lg-9 col-sm-8 col-xs-8 provider-info align-self-center">
+                                {{ provider.requirement|raw }}
+                                <p><strong>{{ "Beschreibung"|trans }}:</strong><br>{{ provider.getDescription() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-4 col-xl-4 price-info order-last">
+                        <div class="col-12 align-self-center mb-auto d-flex">
+                            <h3><price class="price number">{{ provider.getPrice()|number_format(2,',','.') }}€</price></h3>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 align-self-center">
+                            {% if provider.getProductLink().getPath() is defined %}
+                                <a type="button" class="provLink btn btn-block btn-primary-orange btn-secondary-orange hiddenButton"
+                                   target="{{ provider.getProductLink().getTarget() }}"
+                                   href="{{ provider.getProductLink().getPath() }}">
+                                    {{ provider.getProductLink().getText() }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+            {#{% endfor %}#}
+        {% endif %}
+    </div>
+</section>
+
+    <section id="total-price">
+        <div class="container">
+            <div class="row row-total">
+                <div class="col-5 col-sm-4 col-md-4 col-lg-4 col-xl-3 order-btn-last align-self-center text-center text-sm-left">
+                    <a class="btn btn-secondary-blue btn-prev text-uppercase" href="{{ path('props',{ 'categories': categories }) }}">{{ "Zurück"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="lastToDo">
+        <div class="toDo">Letzte Aktualisierung am: {{ "now"|date("d.m.Y") }}
+            <a href="#" class="tooltipButton" data-toggle="tooltip" data-html="true" data-placement="top" title="
+                Für die Richtigkeit der Angaben kann keine<br>
+                Gewähr übernommen werden. Es wurden jedoch<br>
+                alle Angaben mit größter Sorgfalt aufbereitet<br>"
+            >
+                <i class="fas fa-info-circle" style="font-size: 18px;"></i>
+
+            </a>
+        </div>
+    </section>
+
+
+    <section id="email">
+    <form method="post">
+    <div class="container">
+        <div class="row justify-content-center justify-content-md-between">
+            <div class="col-12 col-sm-7 col-md-9 col-lg-4 col-xs-4">
+                <p>{{ "Du bist auf einem mobilen Gerät unterwegs?"|trans }}<br>{{ "Kein Problem - Wir senden Dir Deine Auswahl per E-Mail zu."|trans }}</p>
+            </div>
+            <div class="col-12 col-sm-9 col-md-12 col-lg-8 col-xs-8">
+                <div class="row">
+                    <div class="col-lg-9 col-md-9 col-xs-9">
+                        <div class="row">
+                        <input type="text" class="form-control" style="height:60px;" placeholder="Gib hier Deine E-Mail Adresse ein" aria-label="Recipient's username" aria-describedby="basic-addon2" name="email">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-xs-9">
+                        <div class="row">
+                            <div class="input-group-append">
+                                <button name="sendEmail" class="btn btn-primary-blue" type="submit" style="width: 100%; height: 60px; font-size: 2.0rem;" value="isSend">{{ "Senden"|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</section>
+
+    {#  <div id="my-modal" class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header" style="background-color:#0077ac">
+                      <h5 class="modal-title" style="color:white;">pick out sports</h5>
+                      <button style="color:white;margin:-2rem -1rem -1rem auto;" type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <form method="post" id="cookieForm" style="margin-block-end: 0;">
+                      <div class="modal-body" style="background-color: #e9ecef;">
+                          <h2 style="font-weight: bold">Deine E-Mail angeben und sofort Dein Ergebnis bekommen.</h2><br>
+                          <input style="height: 50px;" type="email" class="form-control" name="newsletter-email" placeholder="example@email.de*" required><br>
+                          <div class="form-check">
+                              <input type="checkbox" name="newsletter-check" class="form-check-input" id="newsletter">
+                              <label class="form-check-label" for="newsletter">Ich möchte den kostenlosen Newsletter (alle Infos zu Deinen Ligen)</label>
+                          </div>
+                          <br>
+                          <br>
+                          <p style="color: gray">Mit dem Drücken auf Senden akzeptiere ich, dass mir mein Ergebnis in einer E-Mail zugesendet wird und die Datenschutzerklärung gelesen zu haben, sowie damit einverstanden zu sein. <a href="{{ path("datenschutz") }}" target="_blank">"Zur Datenschutzerklärung"</a></p>
+                      </div>
+                      <div class="modal-footer" style="background-color: #e9ecef;">
+                          <input type="submit" name="sendEmail" class="btn btn-primary" value="Senden">
+                          <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Schließen</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <style>
+          .modal-open .modal{
+              background-color: rgba(0,0,0,.9) !important;
+          }
+      </style>#}
+{% endblock %}

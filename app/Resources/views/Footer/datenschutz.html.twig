@@ -1,0 +1,21 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+    <div class="container" id="datenschutz">
+        <div class="row">
+            <section id="breadcrumb-header">
+                <div class="col-12 text-center">
+                {{ pimcore_wysiwyg('datenschutz-header') }}
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                {{ pimcore_wysiwyg('datenschutz-content') }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

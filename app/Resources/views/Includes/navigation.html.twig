@@ -1,0 +1,63 @@
+{# get root node if there is no document defined (for pages which are routed directly through static route) #}
+    {% if not document is defined or not document %}
+        {% set document = pimcore_document(1) %}
+    {% endif %}
+    {# get the document which should be used to start in navigation | default home #}
+    {% set navStartNode = document.getProperty('navigationRoot') %}
+    {% if not navStartNode is instanceof('\\Pimcore\\Model\\Document\\Page') %}
+        {% set navStartNode = pimcore_document(1) %}
+    {% endif %}
+    {% set mainNavigation = pimcore_build_nav(document, navStartNode) %}
+    {# later you can render the navigation #}
+    {#{{ pimcore_render_nav(mainNavigation) }}#}
+    {% set renderer = pimcore_nav_renderer('menu') %}
+
+{% if not editmode %}
+<nav class="navbar navbar-dark fixed-top bg-faded" role="navigation">
+    <a class="navbar-brand" href="{{ path("index") }}"><img src="{{ logo.getLogo() }}" style="height:50px;margin-top:-19px"></a>
+    <button class="navbar-toggler pull-xs-right" id="navbarSideButton" type="button">
+        <img src="{{ asset('img/burger-button.png') }}">
+    </button>
+    <!-- navbar-side -->
+    <ul class="navbar-side" id="navbarSide" style="padding-left: 15px;overflow-y: auto;">
+        <li>
+            <div class="close">
+                <img src="{{ asset('img/close-button.png') }}">
+            </div>
+        </li>
+        <li class="navbar-side-item">
+            <a href="{{ path("index") }}" class="side-link">{{ "Home"|trans }}</a>
+
+            {% for page in mainNavigation %}
+                {% if page.isVisible() and renderer.accept(page)  %}
+                    <br>
+                    {% if not page.hasPages() %}
+                        <a href="{{ page.getHref() }}" class="side-link">{{ page.getLabel()|trans}}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if page.hasPages() %}
+                    <a href="#{{ page.getHref() }}" data-toggle="collapse" class="side-link dropdown-toggle">{{ page.getLabel()|trans}}</a>
+                    <div class="collapse" id="{{ page.getHref() }}" aria-labelledby="navbarDropdown">
+                    {% for subsite in page %}
+                        <a href="#{{ subsite.getHref() }}" {% if subsite.hasPages() %}data-toggle="collapse"{% endif %} class="side-link dropdown-toggle">{{ subsite.getLabel()|trans}}</a>
+                        <br>
+                        {% if subsite.hasPages() %}
+                            {% for subsubsite in subsite %}
+                                <div class="collapse" id="{{ subsite.getHref() }}">
+                                    <a class="dropdown-item" href="{{ subsubsite.getHref() }}" title="{{ subsubsite.getLabel()|trans}}">{{ subsubsite.getLabel()|trans }}</a>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+
+
+            {% endfor %}
+
+        </li>
+    </ul>
+    <div class="overlay"></div>
+</nav>
+{% endif %}

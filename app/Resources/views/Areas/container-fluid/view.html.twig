@@ -1,0 +1,15 @@
+{% set bgc = pimcore_select('color',{reload:true, store:[["lightgreen","hellgrün"],["darkgreen","dunkelgrün"],["blue","blau"],["yellow","gelb"],["white","weiß"]]}) %}
+
+{% if editmode %}
+<div style="border: dashed 1px limegreen; padding:15px;margin-top:15px;">
+    Hintergrund: {{ bgc|raw }}
+    {{ pimcore_areablock('containerFluidBlock') }}
+</div>
+{% endif %}
+
+
+{% if not editmode %}
+    <div class="container-fluid" style="background-color:{{ bgc|raw }};">
+        {{ pimcore_areablock('containerFluidBlock') }}
+    </div>
+{% endif %}

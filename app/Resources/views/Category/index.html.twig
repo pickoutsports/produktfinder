@@ -1,0 +1,103 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+    <form method="post" action="category">
+        <section id="breadcrumb-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="breadcrumb justify-content-center">
+                            <li><a href="{{ path('index') }}"><img src="{{ asset('img/home.png') }}"></a></li>
+                            <li><a href="{{ path('category') }}" class="active">{{ "KATEGORIE"|trans }}</a></li>
+                            <li><button href="{{ path('props') }}" type="submit" class="disabledSporttype">{{ "EIGENSCHAFTEN"|trans }}</button></li>
+                            <li><a href="{{ path('product') }}" class="disabled">{{ "PRODUKTE"|trans }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="">{{ "KATEGORIE AUSWÄHLEN"|trans }}
+                            <a href="#" style="font-size: 30px;" class="tooltipButton" data-toggle="tooltip" data-placement="top" title="{{ pimcore_wysiwyg('category-tooltip') }}">
+                                <i id="tooltipCircle" class="fas fa-info-circle"></i>
+                            </a>
+                        </h1>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <section id="sport-options">
+            <div class="container sporttype">
+                <div class="row form-group justify-content-center">
+
+                    {% for sport in cat %}
+                        {% set visible = 'invisible' %}
+                        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                            <div class="img-zoomin" id="{{ sport.getId() }}" name="{{ sport.getName() }}">
+                                <img src="{{ sport.getImage()}}" title="{{ sport.getImage().getMetaData("title") }}" alt="{{ sport.getImage().getMetaData("alt") }}" class="img-fluid img-sport">
+
+                                {% if category is defined %}
+                                    {% for type in category %}
+                                        {% if type.getName() == sport.getName() %}
+                                            {% set visible = 'visible' %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                <input class="providercheck" type="checkbox" name="{{ sport.getName() }}" value="{{ sport.getId() }}" {% if visible == 'visible' %} checked {% endif %} hidden>
+                                <div id="checkActive" class="active-field {{ visible }}" name="visible"></div>
+                                <div class="img-overlay" style="color: black !important;">
+                                    {{ sport.getName() }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </section>
+
+        <section id="bottom-btn">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col col-buttons">
+                        <a class="btn btn-primary-blue btn-prev text-uppercase" href="{{ path('index') }}">{{ "Zurück"|trans }}</a>
+                    </div>
+                    <div class="col col-buttons text-right">
+                        <button class="btn btn-primary-blue btn-next text-uppercase disabledSporttype" type="submit" href="{{ path('props') }}">{{ "Weiter"|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+    <div class="container">
+    <div class="row justify-content-center">
+        <p>{{ pimcore_wysiwyg('seo-category') }}</p>
+    </div>
+
+    </div>
+
+    <!-- Display Anzeigen -->
+{#    <div class="offset-2 col-8 offset-2" style="margin-bottom:245px;">#}
+{#        <ins class="adsbygoogle"#}
+{#             style="display:block;"#}
+{#             data-ad-client="ca-pub-6966232917900984"#}
+{#             data-ad-slot="6257166565"#}
+{#             data-ad-format="auto"#}
+{#             data-full-width-responsive="true"></ins>#}
+{#    </div>#}
+
+{#    <script>#}
+{#        (adsbygoogle = window.adsbygoogle || []).push({});#}
+{#    </script>#}
+
+
+
+{% endblock %}

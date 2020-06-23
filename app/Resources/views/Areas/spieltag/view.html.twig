@@ -1,0 +1,62 @@
+{% if editmode %}
+    id: {{ pimcore_input("id", {'width': 540}) }}<br>
+    Anzahl Spieltage: {{ pimcore_input("spieltag", {'width': 540}) }}<br>
+{% else %}
+
+    <div id="fixtures"></div>
+
+    <script>
+        function loadDoc() {
+            // id dynamisch über backend einfügbar
+            let id = "{{ pimcore_input("id") }}";
+            // length angebar machen
+            let length = {{ pimcore_input("spieltag") }};
+
+            let days = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+            let prevDate = "";
+            let prevTime = "";
+            let prevRound = 0;
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    for (let i = 0; i < length; i++) {
+                        // DATE
+                        let date = res.events[i].strDate;
+                        let d = new Date(res.events[i].dateEvent);
+                        // day of the week
+                        day = d.getDay();
+                        date = date.replace(/\//g, ".")
+                        // TIME
+                        let time = res.events[i].strTime;
+                        time = time.slice(0, 5);
+                        // EVENT
+                        let e = res.events[i].strEvent;
+                        e = e.replace(/vs/g, "-");
+                        // ROUND
+                        let round = res.events[i].intRound;
+                        if (round != prevRound) {
+                            let headline = document.createElement("h4")
+                            headline.innerHTML = round + ". Spieltag"
+                            document.getElementById("fixtures").appendChild(headline)
+                        }
+                        // PRINT
+                        let text = document.createElement("div");
+                        if (time == prevTime) {
+                            text.innerHTML = e;
+                        } else {
+                            text.innerHTML = "<strong>" + days[day] + ". " + date + ", " + time + " Uhr </strong><br />" + e + "<br />";
+                        }
+                        document.getElementById("fixtures").appendChild(text)
+                        prevDate = date;
+                        prevTime = time;
+                        prevRound = round;
+                    }
+                }
+            };
+            xhttp.open("GET", "https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=" + id, true);
+            xhttp.send();
+        }
+
+    </script>
+{% endif %}

@@ -1,0 +1,43 @@
+{% extends 'subsiteslayout.html.twig' %}
+{% block title %}{{ document.getTitle() }}{% endblock %}
+{% block description %}{{ document.getDescription() }}{% endblock %}
+{% block body %}
+
+    <div class="container" id="presse">
+        <div class="row">
+            <section id="breadcrumb-header">
+                <div class="col-12 text-center">
+                    {{ pimcore_wysiwyg('presse-header') }}
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                {{ pimcore_wysiwyg('presse-content') }}
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">{{ "Name"|trans }}</th>
+                <th scope="col">{{ "Dateigröße"|trans }}</th>
+                <th scope="col">{{ "Download"|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for material in materials %}
+                {% if material is defined %}
+                {% set mb = material.getAsset().getFileSize()/(1024*1024) %}
+                {% set kb = material.getAsset().getFileSize()/(1024) %}
+            <tr>
+                <td>{{ material.getName() }}</td>
+                <td>{% if mb < 1 %}{{ kb|number_format(2) }} KB {% else %}{{ mb|number_format(2) }}MB{% endif %}</td>
+                <td><a href="{{ path('downloads',{'id' :material.getId()}) }}"><i class="fas fa-download"></i></a></td>
+            </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

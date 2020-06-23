@@ -1,0 +1,36 @@
+<footer>
+    <div class="container-fluid">
+        <div class="row footer-height justify-content-between align-items-center">
+            <div class="col-sm-12 col-md-4 col-lg-4 text-center">
+                <ul class="nav justify-content-center justify-content-md-start">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('datenschutz') }}">{{ "Datenschutz"|trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('kontakt') }}">{{ "Kontakt"|trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('impressum') }}">{{ "Impressum"|trans }}</a>
+                    </li>
+                    {#<li class="nav-item">
+                        <a class="nav-link" href="{{ path('presse') }}">{{ "Presse"|trans }}</a>
+                    </li>#}
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4 copyright text-center">
+                <p>{{ pimcore_wysiwyg('footer') }}</p>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row justify-content-center">
+                    {% for social in socials %}
+                        {% if social is defined %}
+                                <a class="nav-link" href="{{social.getLink()}}">
+                                <img src="{{social.getIcon()}}" style="width: 15px"></a>
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

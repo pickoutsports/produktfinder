@@ -1,0 +1,73 @@
+{% extends 'subsiteslayout.html.twig' %}
+
+{% block title %}{{ document.getTitle() }}{% endblock %}
+
+{% block description %}{{ document.getDescription() }}{% endblock %}
+
+{% block body %}
+    {% if editmode %}
+    <style type="text/css">
+        .areablock-style{
+            margin: 80px 20px;
+            height:30px;
+        }
+        .pimcore_block_plus{
+            height:20px;
+            margin-bottom:15px;
+        }
+        .pimcore_block_options{
+            height:20px;
+        }
+        .pimcore_block_minus{
+            height:20px;
+        }
+        .pimcore_block_up{
+            height:20px;
+        }
+        .pimcore_block_down{
+            height:20px;
+        }
+        .pimcore_block_type{
+            height:20px;
+        }
+        .pimcore_block_visibility{
+            height:20px;
+        }
+        .pimcore-block_clear{
+            height:20px;
+        }
+        .sliderimage-edit{
+            max-height:500px;
+        }
+        .pimcore_area_provider-slider{
+            margin-top:15px;
+        }
+        .pimcore_area_snippet{
+            margin-top:15px;
+        }
+        .pimcore_area_spieltag{
+            margin-top:15px;
+        }
+        .pimcore_area_startbutton{
+            margin-top:15px;
+        }
+        .pimcore_area_add-stars{
+            margin-top:15px;
+        }
+        .pimcore_area_teaser-item{
+            margin-top:15px;
+        }
+        .pimcore_area_text-accordion{
+            margin-top:15px;
+        }
+        .card{
+            margin-top:15px;
+        }
+    </style>
+    {% endif %}
+    <div class="custom-content">
+        {{ pimcore_areablock('contentBlock',{
+            "class": "areablock-style"
+        }) }}
+    </div>
+{% endblock %}

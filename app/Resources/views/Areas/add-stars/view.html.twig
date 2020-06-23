@@ -1,0 +1,56 @@
+{% if editmode %}
+<h3>Felder für Sternebewertung</h3>
+Name: {{ pimcore_input("googlename", {'width': 540}) }}<br>
+Headline: {{ pimcore_input("googleheadline", {'width': 540}) }}<br>
+MainEntityOfPage: {{ pimcore_input("googleEntityOfPage", {'width': 540}) }}<br>
+Url: {{ pimcore_input("googleUrl", {'width': 540}) }}<br>
+SiteId: {{ pimcore_input("sideid", {'width': 540}) }}<br>
+DateModified: {{ pimcore_input("datemodified", {'width': 540}) }}
+
+{% else %}
+
+
+{% set siteKey = pimcore_input("sideid") %}
+
+
+        {% for rating in ratings %}
+            {% if rating["id"] == siteKey %}
+                <div class="container" style="text-align: center;">
+                    <div class="rw-ui-container"></div>
+                </div>
+                {% set ratingCount = rating["approved_count"] %}
+                {% set ratingValue = rating["avg_rate"] %}
+                <script type="application/ld+json">
+    {
+        "@context" : "http://schema.org",
+        "@type" : "Book",
+        "name" : "{{ pimcore_input("googlename") }}",
+        "author" : {
+            "@type" : "Person",
+            "name" : "pick out sports"
+        },
+        "datePublished" : "2019-07-08",
+        "headline" : "{{ pimcore_input("googleheadline") }}",
+        "image" : "https://www.pickoutsports.de/Sportart/football.jpg",
+        "mainEntityOfPage" : "{{ pimcore_input("googleEntityOfPage") }}",
+        "url" : "{{ pimcore_input("googleUrl") }}",
+        "publisher" : {
+            "@type" : "Organization",
+            "name" : "pick out sports",
+            "logo" : {
+                "@type": "ImageObject",
+                "url" : "https://www.pickoutsports.de/img/homeLogo.png"
+            }
+        },
+        "aggregateRating" : {
+            "@type" : "AggregateRating",
+            "ratingValue" : "{{ratingValue}}",
+            "bestRating" : "5,0",
+            "worstRating" : "4,0",
+            "ratingCount" : "{{ratingCount}}"
+        },
+        "dateModified" : "{{ pimcore_input("datemodified")}}"
+    }</script>
+            {% endif %}
+        {% endfor %}
+{% endif %}
